@@ -11,6 +11,8 @@ module Temp {
 
         private dots: List<number>;
         
+        private interval = 30;
+
         constructor(canvas: HTMLCanvasElement, radius: number, center: Coordinates) {
             this.canvas = canvas;
             this.center = center;
@@ -21,26 +23,6 @@ module Temp {
 
         start = (): void => {
             
-//            for (var i = 0; i<Math.PI*4; i+=0.05) {
-//
-//                var x = this.center.x + this.radius * Math.cos(i);
-//                var y = this.center.y + this.radius * Math.sin(i);
-//
-//                var coords = new Coordinates(x, y);
-//
-//                ((crd: Coordinates, i: number) => {
-//                    setTimeout(() => {
-//                        this.clear();
-//                        this.drawArc();
-//                        this.drawLine(crd);
-//                        this.dots.add(crd.y);
-//                        this.drawGraph();
-//
-//                    }, i);
-//                    
-//                })(coords, i*2000);
-//            }
-
             var tempAmgle = 45;
 
             setInterval(() => {
@@ -65,22 +47,26 @@ module Temp {
 
                 tempAmgle += 0.1;
 
-            },30);
+            }, this.interval);
 
         }
 
-        drawConnectingLine = (start:Coordinates, end:Coordinates) => {
+        drawConnectingLine = (start: Coordinates, end: Coordinates) => {
+            this.ctx.strokeStyle = "#00FF00";
             this.ctx.beginPath();
             this.ctx.lineTo(start.x, start.y);
             this.ctx.lineTo(end.x, end.y);
             this.ctx.stroke();
+            this.ctx.strokeStyle = "#000000";
         }
 
         drawRadius = (end:Coordinates) => {
             this.ctx.beginPath();
+            this.ctx.strokeStyle = "#ff0000";
             this.ctx.lineTo(this.center.x, this.center.y);
             this.ctx.lineTo(end.x, end.y);
             this.ctx.stroke();
+            this.ctx.strokeStyle = "#000000";
         }
 
         drawArc = () => {
@@ -98,7 +84,7 @@ module Temp {
             var length = this.dots.length;
             
             for (let i = 0; i < length; i++) {
-                this.drawDot(new Coordinates(1250 - (this.center.x + this.radius + i * 4), this.dots.getAt(i)), 4);
+                this.drawDot(new Coordinates(1250 - (this.center.x + this.radius + i * 4), this.dots.getAt(i)), 2);
             }
         }
           
@@ -108,7 +94,6 @@ module Temp {
             var canvasH = parseInt(this.canvas.getAttribute("height"), 10);
 
             this.ctx.clearRect(0, 0, canvasW, canvasH);
-            
         }
     }
 
