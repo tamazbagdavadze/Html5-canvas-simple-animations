@@ -373,7 +373,7 @@ var Animations;
     var Square = (function () {
         function Square(canvas, height, startPoint) {
             var _this = this;
-            this.interval = 15;
+            this.interval = 16;
             this.start = function () {
                 var tempAmgle = 0;
                 setInterval(function () {
