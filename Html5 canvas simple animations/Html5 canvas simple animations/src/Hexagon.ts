@@ -1,6 +1,6 @@
 ﻿module Animations {
-    export class Square {
-        
+    export class Hexagon {
+
         private startPoint: Coordinates;
         private center: Coordinates;
         private height: number;
@@ -9,7 +9,13 @@
 
         private dots: List<number>;
 
+        private temp = false;
+
         private interval = 16;
+
+        private sections: Section[] = new Array<Section>(7);
+
+        private radiusSection: Section;
 
         constructor(canvas: HTMLCanvasElement, height: number, startPoint: Coordinates) {
             this.canvas = canvas;
@@ -18,6 +24,8 @@
             this.ctx = canvas.getContext("2d");
             this.dots = new List<number>(100);
             this.center = new Coordinates(startPoint.x + height / 2, startPoint.y + height / 2);
+
+            this.initSections();
         }
 
         start = (): void => {
@@ -26,15 +34,18 @@
 
             setInterval(() => {
 
-                var x = this.center.x + this.height * Math.cos(tempAmgle);
-                var y = this.center.y + this.height * Math.sin(tempAmgle);
-                
+                var x = this.center.x + this.height * 2 * Math.cos(tempAmgle);
+                var y = this.center.y + this.height * 2 * Math.sin(tempAmgle);
+
                 var crd = new Coordinates(x, y);
+
+                this.radiusSection = new Section(this.center, crd);
+
                 var intersection = this.getSquareIntersectionPoint(crd);
-                
+
                 if (intersection != null) {
                     this.clear();
-                    this.drawSquare();
+                    this.drawHExagon();
                     this.drawRadius(intersection);
                     this.dots.add(intersection.y);
 
@@ -51,44 +62,47 @@
             }, this.interval);
         }
 
+        initSections = (): void => {
+            for (var i = 0; i < 7; i++) {
+                this.sections[i] = new Section(null, null);
+            }
+
+            var numberOfSides = 6,
+                size = 100,
+                Xcenter = 160,
+                Ycenter = 160;
+
+            var x: number;
+            var y: number;
+
+            for (var i = 0; i <= numberOfSides; i += 1) {
+
+                x = Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides);
+                y = Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides);
+
+                let crds = new Coordinates(x, y);
+
+                this.sections[i].start = crds;
+                if (i != 0)
+                    this.sections[i - 1].end = crds
+                else
+                    this.sections[numberOfSides].end = crds
+            }
+        }
+
         getSquareIntersectionPoint = (crd: Coordinates): Coordinates => {
-            
+
             var point: Coordinates = null;
 
-            point = lineIntersect(this.center.x, this.center.y, crd.x, crd.y, this.startPoint.x, this.startPoint.y, this.startPoint.x, this.startPoint.y + this.height);
-            
+            var radius = this.radiusSection;
 
-            if (point == null) {
-                point = lineIntersect(this.center.x, this.center.y, crd.x, crd.y, this.startPoint.x, this.startPoint.y, this.startPoint.x + this.height, this.startPoint.y);
+            for (var section of this.sections) {
+                point = lineIntersect(radius.start.x, radius.start.y, radius.end.x, radius.end.y, section.start.x, section.start.y, section.end.x, section.end.y)
+                if (point != null)
+                    break;
             }
 
-            if (point == null) {
-                point = lineIntersect(this.center.x, this.center.y, crd.x, crd.y, this.startPoint.x + this.height, this.startPoint.y, this.startPoint.x + this.height, this.startPoint.y + this.height);
-            }
-
-            if (point == null) {
-               point = lineIntersect(this.center.x, this.center.y, crd.x, crd.y, this.startPoint.x, this.startPoint.y + this.height, this.startPoint.x + this.height, this.startPoint.y + this.height);
-            }
             return point;
-
-            
-
-            //var point: Coordinates = null;
-
-            //point = getIntersectionPoint(this.center, crd, this.startPoint, new Coordinates(this.startPoint.x, this.startPoint.y + this.height));
-
-            //if (point == null) {
-            //    point = getIntersectionPoint(this.center, crd, this.startPoint, new Coordinates(this.startPoint.x + this.height, this.startPoint.y)); 
-            //}
-
-            //if (point == null) {
-            //    point = getIntersectionPoint(this.center, crd, new Coordinates(this.startPoint.x + this.height, this.startPoint.y), new Coordinates(this.startPoint.x + this.height, this.startPoint.y + this.height)); 
-            //}
-
-            //if (point == null) {
-            //    point = getIntersectionPoint(this.center, crd, new Coordinates(this.startPoint.x, this.startPoint.y + this.height), new Coordinates(this.startPoint.x + this.height, this.startPoint.y + this.height));
-            //}
-            //return point;
         }
 
         drawConnectingLine = (start: Coordinates, end: Coordinates) => {
@@ -109,10 +123,22 @@
             this.ctx.strokeStyle = "#000000";
         }
 
-        drawSquare = () => {
+        drawHExagon = () => {
+
             this.ctx.beginPath();
-            this.ctx.strokeRect(this.startPoint.x, this.startPoint.y, this.height, this.height);           
+            
+            for (var section of this.sections) {
+                this.drawSection(section.start, section.end);
+            }
+            
+            this.ctx.strokeStyle = "#000000";
+            this.ctx.lineWidth = 1;
             this.ctx.stroke();
+        }
+
+        drawSection = (start: Coordinates, end: Coordinates): void => {
+            this.ctx.moveTo(start.x, start.y);
+            this.ctx.lineTo(end.x, end.y);
         }
 
         drawDot = (crds: Coordinates, width: number = 1) => {

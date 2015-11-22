@@ -96,10 +96,4 @@ module Animations {
             this.ctx.clearRect(0, 0, canvasW, canvasH);
         }
     }
-
-    export class Coordinates {
-        constructor(public x: number, public y: number) {
-
-        }
-    }
 }

@@ -1,4 +1,25 @@
-﻿module Animations {
+﻿
+module Animations {
+
+    export class Coordinates {
+        constructor(public x: number, public y: number) {
+
+        }
+    }
+
+    export class Section {
+        constructor(public start: Coordinates, public end: Coordinates) {
+
+        }
+    }
+
+    /**
+     * bad func
+     * @param v11
+     * @param v12
+     * @param v21
+     * @param v22
+     */
     export function getIntersectionPoint(v11:Coordinates,v12:Coordinates, v21:Coordinates, v22:Coordinates):Coordinates {
 
         var A1 = v12.y - v11.y;
@@ -69,6 +90,17 @@
         return new Coordinates(x, y);
     }
 
+    /**
+     * bad func
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param x3
+     * @param y3
+     * @param x4
+     * @param y4
+     */
     export function lineIntersect2(x1, y1, x2, y2, x3, y3, x4, y4): Coordinates {
         var x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
         var y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
