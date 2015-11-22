@@ -1,3 +1,80 @@
+var Animations;
+(function (Animations) {
+    function getIntersectionPoint(v11, v12, v21, v22) {
+        var A1 = v12.y - v11.y;
+        var B1 = v11.x - v12.x;
+        var C1 = A1 * v11.x + B1 * v11.y;
+        var A2 = v22.y - v21.y;
+        var B2 = v21.x - v22.x;
+        var C2 = A2 * v21.x + B2 * v21.y;
+        var det = A1 * B2 - A2 * B1;
+        if (det == 0) {
+            return null;
+        }
+        var x = (B2 * C1 - B1 * C2) / det;
+        var y = (A1 * C2 - A2 * C1) / det;
+        console.log(x + " " + y);
+        if (x < Math.min(v11.x, v12.x, v21.x, v22.x) || x > Math.max(v11.x, v12.x, v21.x, v22.x)) {
+            return null;
+        }
+        if (y < Math.min(v11.y, v12.y, v21.y, v22.y) || y > Math.max(v11.y, v12.y, v21.y, v22.y)) {
+            return null;
+        }
+        return new Animations.Coordinates(Math.abs(x), Math.abs(y));
+    }
+    Animations.getIntersectionPoint = getIntersectionPoint;
+    function lineIntersect(x1, y1, x2, y2, x3, y3, x4, y4) {
+        var x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
+        var y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
+        if (isNaN(x) || isNaN(y)) {
+            return null;
+        }
+        else {
+            if (x1 >= x2) {
+                if (!(x2 <= x && x <= x1)) {
+                    return null;
+                }
+            }
+            else {
+                if (!(x1 <= x && x <= x2)) {
+                    return null;
+                }
+            }
+            if (y1 >= y2) {
+                if (!(y2 <= y && y <= y1)) {
+                    return null;
+                }
+            }
+            else {
+                if (!(y1 <= y && y <= y2)) {
+                    return null;
+                }
+            }
+            if (x3 >= x4) {
+                if (!(x4 <= x && x <= x3)) {
+                    return null;
+                }
+            }
+            else {
+                if (!(x3 <= x && x <= x4)) {
+                    return null;
+                }
+            }
+            if (y3 >= y4) {
+                if (!(y4 <= y && y <= y3)) {
+                    return null;
+                }
+            }
+            else {
+                if (!(y3 <= y && y <= y4)) {
+                    return null;
+                }
+            }
+        }
+        return new Animations.Coordinates(x, y);
+    }
+    Animations.lineIntersect = lineIntersect;
+})(Animations || (Animations = {}));
 var MyLib;
 (function (MyLib) {
     var List = (function () {
@@ -138,31 +215,13 @@ var $;
     $.query = query;
 })($ || ($ = {}));
 var List = MyLib.List;
-var Temp;
-(function (Temp_1) {
-    var Temp = (function () {
-        function Temp(canvas, radius, center) {
+var Animations;
+(function (Animations) {
+    var Circle = (function () {
+        function Circle(canvas, radius, center) {
             var _this = this;
+            this.interval = 30;
             this.start = function () {
-                //            for (var i = 0; i<Math.PI*4; i+=0.05) {
-                //
-                //                var x = this.center.x + this.radius * Math.cos(i);
-                //                var y = this.center.y + this.radius * Math.sin(i);
-                //
-                //                var coords = new Coordinates(x, y);
-                //
-                //                ((crd: Coordinates, i: number) => {
-                //                    setTimeout(() => {
-                //                        this.clear();
-                //                        this.drawArc();
-                //                        this.drawLine(crd);
-                //                        this.dots.add(crd.y);
-                //                        this.drawGraph();
-                //
-                //                    }, i);
-                //                    
-                //                })(coords, i*2000);
-                //            }
                 var tempAmgle = 45;
                 setInterval(function () {
                     var x = _this.center.x + _this.radius * Math.cos(tempAmgle);
@@ -178,19 +237,23 @@ var Temp;
                     _this.drawGraph();
                     _this.drawConnectingLine(crd, new Coordinates(1250 - (_this.center.x + _this.radius + _this.dots.length * 4), crd.y));
                     tempAmgle += 0.1;
-                }, 30);
+                }, _this.interval);
             };
             this.drawConnectingLine = function (start, end) {
+                _this.ctx.strokeStyle = "#00FF00";
                 _this.ctx.beginPath();
                 _this.ctx.lineTo(start.x, start.y);
                 _this.ctx.lineTo(end.x, end.y);
                 _this.ctx.stroke();
+                _this.ctx.strokeStyle = "#000000";
             };
             this.drawRadius = function (end) {
                 _this.ctx.beginPath();
+                _this.ctx.strokeStyle = "#ff0000";
                 _this.ctx.lineTo(_this.center.x, _this.center.y);
                 _this.ctx.lineTo(end.x, end.y);
                 _this.ctx.stroke();
+                _this.ctx.strokeStyle = "#000000";
             };
             this.drawArc = function () {
                 _this.ctx.beginPath();
@@ -204,7 +267,7 @@ var Temp;
             this.drawGraph = function () {
                 var length = _this.dots.length;
                 for (var i = 0; i < length; i++) {
-                    _this.drawDot(new Coordinates(1250 - (_this.center.x + _this.radius + i * 4), _this.dots.getAt(i)), 4);
+                    _this.drawDot(new Coordinates(1250 - (_this.center.x + _this.radius + i * 4), _this.dots.getAt(i)), 2);
                 }
             };
             this.clear = function () {
@@ -218,9 +281,9 @@ var Temp;
             this.ctx = canvas.getContext("2d");
             this.dots = new List(100);
         }
-        return Temp;
+        return Circle;
     })();
-    Temp_1.Temp = Temp;
+    Animations.Circle = Circle;
     var Coordinates = (function () {
         function Coordinates(x, y) {
             this.x = x;
@@ -228,14 +291,121 @@ var Temp;
         }
         return Coordinates;
     })();
-    Temp_1.Coordinates = Coordinates;
-})(Temp || (Temp = {}));
+    Animations.Coordinates = Coordinates;
+})(Animations || (Animations = {}));
+var Animations;
+(function (Animations) {
+    var Square = (function () {
+        function Square(canvas, height, startPoint) {
+            var _this = this;
+            this.interval = 15;
+            this.start = function () {
+                var tempAmgle = 0;
+                setInterval(function () {
+                    var x = _this.center.x + _this.height * Math.cos(tempAmgle);
+                    var y = _this.center.y + _this.height * Math.sin(tempAmgle);
+                    var crd = new Animations.Coordinates(x, y);
+                    var intersection = _this.getSquareIntersectionPoint(crd);
+                    if (intersection != null) {
+                        _this.clear();
+                        _this.drawSquare();
+                        _this.drawRadius(intersection);
+                        _this.dots.add(intersection.y);
+                        if (_this.dots.length > 200) {
+                            _this.dots.removeFirst();
+                        }
+                        _this.drawGraph();
+                        _this.drawConnectingLine(intersection, new Animations.Coordinates(1250 - (_this.startPoint.x + _this.height + _this.dots.length * 4), intersection.y));
+                    }
+                    tempAmgle += 0.05;
+                }, _this.interval);
+            };
+            this.getSquareIntersectionPoint = function (crd) {
+                var point = null;
+                point = Animations.lineIntersect(_this.center.x, _this.center.y, crd.x, crd.y, _this.startPoint.x, _this.startPoint.y, _this.startPoint.x, _this.startPoint.y + _this.height);
+                if (point == null) {
+                    point = Animations.lineIntersect(_this.center.x, _this.center.y, crd.x, crd.y, _this.startPoint.x, _this.startPoint.y, _this.startPoint.x + _this.height, _this.startPoint.y);
+                }
+                if (point == null) {
+                    point = Animations.lineIntersect(_this.center.x, _this.center.y, crd.x, crd.y, _this.startPoint.x + _this.height, _this.startPoint.y, _this.startPoint.x + _this.height, _this.startPoint.y + _this.height);
+                }
+                if (point == null) {
+                    point = Animations.lineIntersect(_this.center.x, _this.center.y, crd.x, crd.y, _this.startPoint.x, _this.startPoint.y + _this.height, _this.startPoint.x + _this.height, _this.startPoint.y + _this.height);
+                }
+                return point;
+                //var point: Coordinates = null;
+                //point = getIntersectionPoint(this.center, crd, this.startPoint, new Coordinates(this.startPoint.x, this.startPoint.y + this.height));
+                //if (point == null) {
+                //    point = getIntersectionPoint(this.center, crd, this.startPoint, new Coordinates(this.startPoint.x + this.height, this.startPoint.y));
+                //}
+                //if (point == null) {
+                //    point = getIntersectionPoint(this.center, crd, new Coordinates(this.startPoint.x + this.height, this.startPoint.y), new Coordinates(this.startPoint.x + this.height, this.startPoint.y + this.height));
+                //}
+                //if (point == null) {
+                //    point = getIntersectionPoint(this.center, crd, new Coordinates(this.startPoint.x, this.startPoint.y + this.height), new Coordinates(this.startPoint.x + this.height, this.startPoint.y + this.height));
+                //}
+                //return point;
+            };
+            this.drawConnectingLine = function (start, end) {
+                _this.ctx.strokeStyle = "#00FF00";
+                _this.ctx.beginPath();
+                _this.ctx.lineTo(start.x, start.y);
+                _this.ctx.lineTo(end.x, end.y);
+                _this.ctx.stroke();
+                _this.ctx.strokeStyle = "#000000";
+            };
+            this.drawRadius = function (end) {
+                _this.ctx.beginPath();
+                _this.ctx.strokeStyle = "#ff0000";
+                _this.ctx.lineTo(_this.center.x, _this.center.y);
+                _this.ctx.lineTo(end.x, end.y);
+                _this.ctx.stroke();
+                _this.ctx.strokeStyle = "#000000";
+            };
+            this.drawSquare = function () {
+                _this.ctx.beginPath();
+                _this.ctx.strokeRect(_this.startPoint.x, _this.startPoint.y, _this.height, _this.height);
+                _this.ctx.stroke();
+            };
+            this.drawDot = function (crds, width) {
+                if (width === void 0) { width = 1; }
+                _this.ctx.fillRect(crds.x, crds.y, width, width);
+            };
+            this.drawGraph = function () {
+                var length = _this.dots.length;
+                for (var i = 0; i < length; i++) {
+                    _this.drawDot(new Animations.Coordinates(1250 - (_this.startPoint.x + _this.height + i * 4), _this.dots.getAt(i)), 2);
+                }
+            };
+            this.clear = function () {
+                var canvasW = parseInt(_this.canvas.getAttribute("width"), 10);
+                var canvasH = parseInt(_this.canvas.getAttribute("height"), 10);
+                _this.ctx.clearRect(0, 0, canvasW, canvasH);
+            };
+            this.canvas = canvas;
+            this.startPoint = startPoint;
+            this.height = height;
+            this.ctx = canvas.getContext("2d");
+            this.dots = new List(100);
+            this.center = new Animations.Coordinates(startPoint.x + height / 2, startPoint.y + height / 2);
+        }
+        return Square;
+    })();
+    Animations.Square = Square;
+})(Animations || (Animations = {}));
 /// <reference path="$.ts"/>
 /// <reference path="../myLib/List.ts"/>
-/// <reference path="Temp.ts"/>
+/// <reference path="helpers.ts" />
+/// <reference path="Circle.ts"/>
+/// <reference path="Square.ts"/>
 var canvas = $.query("#canvas");
-var center = new Temp.Coordinates(150, 150);
+var center = new Animations.Coordinates(150, 150);
 var radius = 50;
-var temp = new Temp.Temp(canvas, radius, center);
-temp.start();
+var cirle = new Animations.Circle(canvas, radius, center);
+cirle.start();
+var canvas2 = $.query("#canvas2");
+var startPoint = new Animations.Coordinates(120, 120);
+var height = 100;
+var square = new Animations.Square(canvas2, height, startPoint);
+square.start();
 //# sourceMappingURL=app.js.map
