@@ -1,5 +1,12 @@
 var Animations;
 (function (Animations) {
+    /**
+     * bad func
+     * @param v11
+     * @param v12
+     * @param v21
+     * @param v22
+     */
     function getIntersectionPoint(v11, v12, v21, v22) {
         var A1 = v12.y - v11.y;
         var B1 = v11.x - v12.x;
@@ -24,6 +31,74 @@ var Animations;
     }
     Animations.getIntersectionPoint = getIntersectionPoint;
     function lineIntersect(x1, y1, x2, y2, x3, y3, x4, y4) {
+        var eps = 0.0000001;
+        function between(a, b, c) {
+            return a - eps <= b && b <= c + eps;
+        }
+        var x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) /
+            ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
+        var y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) /
+            ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
+        if (isNaN(x) || isNaN(y)) {
+            return null;
+        }
+        else {
+            if (x1 >= x2) {
+                if (!between(x2, x, x1)) {
+                    return null;
+                }
+            }
+            else {
+                if (!between(x1, x, x2)) {
+                    return null;
+                }
+            }
+            if (y1 >= y2) {
+                if (!between(y2, y, y1)) {
+                    return null;
+                }
+            }
+            else {
+                if (!between(y1, y, y2)) {
+                    return null;
+                }
+            }
+            if (x3 >= x4) {
+                if (!between(x4, x, x3)) {
+                    return null;
+                }
+            }
+            else {
+                if (!between(x3, x, x4)) {
+                    return null;
+                }
+            }
+            if (y3 >= y4) {
+                if (!between(y4, y, y3)) {
+                    return null;
+                }
+            }
+            else {
+                if (!between(y3, y, y4)) {
+                    return null;
+                }
+            }
+        }
+        return new Animations.Coordinates(x, y);
+    }
+    Animations.lineIntersect = lineIntersect;
+    /**
+     * bad func
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param x3
+     * @param y3
+     * @param x4
+     * @param y4
+     */
+    function lineIntersect2(x1, y1, x2, y2, x3, y3, x4, y4) {
         var x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
         var y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
         if (isNaN(x) || isNaN(y)) {
@@ -73,7 +148,7 @@ var Animations;
         }
         return new Animations.Coordinates(x, y);
     }
-    Animations.lineIntersect = lineIntersect;
+    Animations.lineIntersect2 = lineIntersect2;
 })(Animations || (Animations = {}));
 var MyLib;
 (function (MyLib) {
