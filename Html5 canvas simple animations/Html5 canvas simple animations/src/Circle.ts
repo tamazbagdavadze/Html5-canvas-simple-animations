@@ -1,8 +1,8 @@
 ﻿import List = MyLib.List;
 
 
-module Temp {
-    export class Temp {
+module Animations {
+    export class Circle {
 
         private center: Coordinates;
         private radius: number;

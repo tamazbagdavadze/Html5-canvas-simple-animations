@@ -1,14 +1,26 @@
 ﻿/// <reference path="$.ts"/>
 /// <reference path="../myLib/List.ts"/>
-/// <reference path="Temp.ts"/>
-
+/// <reference path="helpers.ts" />
+/// <reference path="Circle.ts"/>
+/// <reference path="Square.ts"/>
 
 var canvas = $.query("#canvas") as HTMLCanvasElement;
-var center = new Temp.Coordinates(150, 150);
+var center = new Animations.Coordinates(150, 150);
 var radius = 50;
 
-var temp = new Temp.Temp(canvas, radius, center);
+var cirle = new Animations.Circle(canvas, radius, center);
 
-temp.start();
+cirle.start();
 
 
+
+
+
+
+var canvas2 = $.query("#canvas2") as HTMLCanvasElement;
+var startPoint = new Animations.Coordinates(120, 120);
+var height = 100;
+
+var square = new Animations.Square(canvas2, height, startPoint);
+
+square.start();
