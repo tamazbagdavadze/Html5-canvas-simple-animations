@@ -9,7 +9,7 @@
 
         private dots: List<number>;
 
-        private interval = 30;
+        private interval = 15;
 
         constructor(canvas: HTMLCanvasElement, height: number, startPoint: Coordinates) {
             this.canvas = canvas;
@@ -28,22 +28,13 @@
 
                 var x = this.center.x + this.height * Math.cos(tempAmgle);
                 var y = this.center.y + this.height * Math.sin(tempAmgle);
-
-                x = Math.ceil(x);
-                y = Math.ceil(y);
-
+                
                 var crd = new Coordinates(x, y);
-                
                 var intersection = this.getSquareIntersectionPoint(crd);
-
-                //console.log(intersection);
-                //console.log(tempAmgle);
                 
-                this.clear();
-                this.drawSquare();
-
-              //  if (intersection != null) {
-
+                if (intersection != null) {
+                    this.clear();
+                    this.drawSquare();
                     this.drawRadius(intersection);
                     this.dots.add(intersection.y);
 
@@ -54,28 +45,50 @@
                     this.drawGraph();
 
                     this.drawConnectingLine(intersection, new Coordinates(1250 - (this.startPoint.x + this.height + this.dots.length * 4), intersection.y));
-                //}
-                tempAmgle += 0.1;
+                }
+                tempAmgle += 0.05;
 
             }, this.interval);
-
         }
 
         getSquareIntersectionPoint = (crd: Coordinates): Coordinates => {
-            var point = getIntersectionPoint(this.center, crd, this.startPoint, new Coordinates(this.startPoint.x, this.startPoint.y + this.height));
+            
+            var point: Coordinates = null;
+
+            point = lineIntersect(this.center.x, this.center.y, crd.x, crd.y, this.startPoint.x, this.startPoint.y, this.startPoint.x, this.startPoint.y + this.height);
+            
 
             if (point == null) {
-                point = getIntersectionPoint(this.center, crd, this.startPoint, new Coordinates(this.startPoint.x + this.height, this.startPoint.y)); 
+                point = lineIntersect(this.center.x, this.center.y, crd.x, crd.y, this.startPoint.x, this.startPoint.y, this.startPoint.x + this.height, this.startPoint.y);
             }
 
             if (point == null) {
-                point = getIntersectionPoint(this.center, crd, new Coordinates(this.startPoint.x + this.height, this.startPoint.y), new Coordinates(this.startPoint.x + this.height, this.startPoint.y + this.height)); 
+                point = lineIntersect(this.center.x, this.center.y, crd.x, crd.y, this.startPoint.x + this.height, this.startPoint.y, this.startPoint.x + this.height, this.startPoint.y + this.height);
             }
 
             if (point == null) {
-                point = getIntersectionPoint(this.center, crd, new Coordinates(this.startPoint.x, this.startPoint.y + this.height), new Coordinates(this.startPoint.x + this.height, this.startPoint.y + this.height));
+               point = lineIntersect(this.center.x, this.center.y, crd.x, crd.y, this.startPoint.x, this.startPoint.y + this.height, this.startPoint.x + this.height, this.startPoint.y + this.height);
             }
             return point;
+
+            
+
+            //var point: Coordinates = null;
+
+            //point = getIntersectionPoint(this.center, crd, this.startPoint, new Coordinates(this.startPoint.x, this.startPoint.y + this.height));
+
+            //if (point == null) {
+            //    point = getIntersectionPoint(this.center, crd, this.startPoint, new Coordinates(this.startPoint.x + this.height, this.startPoint.y)); 
+            //}
+
+            //if (point == null) {
+            //    point = getIntersectionPoint(this.center, crd, new Coordinates(this.startPoint.x + this.height, this.startPoint.y), new Coordinates(this.startPoint.x + this.height, this.startPoint.y + this.height)); 
+            //}
+
+            //if (point == null) {
+            //    point = getIntersectionPoint(this.center, crd, new Coordinates(this.startPoint.x, this.startPoint.y + this.height), new Coordinates(this.startPoint.x + this.height, this.startPoint.y + this.height));
+            //}
+            //return point;
         }
 
         drawConnectingLine = (start: Coordinates, end: Coordinates) => {
