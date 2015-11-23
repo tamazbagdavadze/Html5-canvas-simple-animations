@@ -518,7 +518,11 @@ cirle.start();
 var canvas2 = $.query("#canvas2");
 var ctrl = $.query("#angleNumber");
 var polygon = null;
-ctrl.onchange = function (e) {
+//ctrl.onchange = (e) => {
+//    var angleNumber = parseInt((e.srcElement as HTMLInputElement).value, 10);
+//    angleNumChanged(angleNumber);
+//}
+ctrl.oninput = function (e) {
     var angleNumber = parseInt(e.srcElement.value, 10);
     angleNumChanged(angleNumber);
 };
