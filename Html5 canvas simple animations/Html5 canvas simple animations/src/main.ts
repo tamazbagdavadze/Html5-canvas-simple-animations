@@ -19,7 +19,12 @@ var canvas2 = $.query("#canvas2") as HTMLCanvasElement;
 var ctrl = $.query("#angleNumber") as HTMLInputElement;
 var polygon: Animations.Polygon = null;
 
-ctrl.onchange = (e) => {
+//ctrl.onchange = (e) => {
+//    var angleNumber = parseInt((e.srcElement as HTMLInputElement).value, 10);
+//    angleNumChanged(angleNumber);
+//}
+
+ctrl.oninput = (e) => {
     var angleNumber = parseInt((e.srcElement as HTMLInputElement).value, 10);
     angleNumChanged(angleNumber);
 }
