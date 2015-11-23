@@ -90,7 +90,6 @@
     <TypeScriptCompile Include="src\%24.ts" />
     <TypeScriptCompile Include="src\Hexagon.ts" />
     <TypeScriptCompile Include="src\main.ts" />
-    <TypeScriptCompile Include="src\Square.ts" />
     <TypeScriptCompile Include="src\Circle.ts" />
   </ItemGroup>
   <ItemGroup>

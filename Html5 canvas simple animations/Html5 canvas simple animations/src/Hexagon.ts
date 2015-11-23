@@ -1,20 +1,16 @@
 ﻿module Animations {
-    export class Hexagon {
+    export class Polygon {
 
         private startPoint: Coordinates;
         private center: Coordinates;
         private height: number;
         private canvas: HTMLCanvasElement;
         private ctx: CanvasRenderingContext2D;
-
         private dots: List<number>;
-
         private temp = false;
-
         private interval = 16;
-
-        private sections: Section[] = new Array<Section>(7);
-
+        private sections: Section[];
+        private sectionNumber = 5;
         private radiusSection: Section;
 
         constructor(canvas: HTMLCanvasElement, height: number, startPoint: Coordinates) {
@@ -38,7 +34,6 @@
                 var y = this.center.y + this.height * 2 * Math.sin(tempAmgle);
 
                 var crd = new Coordinates(x, y);
-
                 this.radiusSection = new Section(this.center, crd);
 
                 var intersection = this.getSquareIntersectionPoint(crd);
@@ -63,11 +58,14 @@
         }
 
         initSections = (): void => {
-            for (var i = 0; i < 7; i++) {
+
+            this.sections = new Array<Section>(this.sectionNumber);
+
+            for (var i = 0; i < this.sectionNumber; i++) {
                 this.sections[i] = new Section(null, null);
             }
 
-            var numberOfSides = 6,
+            var numberOfSides = this.sectionNumber - 1,
                 size = 100,
                 Xcenter = 160,
                 Ycenter = 160;
@@ -75,18 +73,25 @@
             var x: number;
             var y: number;
 
-            for (var i = 0; i <= numberOfSides; i += 1) {
+            var angleNumber = (this.sectionNumber - 1);
+            var innerAngle =  180 * (angleNumber - 2) / angleNumber;
+            var rotateAngle = (180 - innerAngle);
+            var rotateAngleRadian = (Math.PI / 180) * (rotateAngle / 2);
+            
+            for (var i = 0; i <= numberOfSides; i++) {
 
-                x = Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides);
-                y = Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides);
+                x = Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides - rotateAngleRadian);
+                y = Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides - rotateAngleRadian);
 
                 let crds = new Coordinates(x, y);
 
                 this.sections[i].start = crds;
-                if (i != 0)
+
+                if (i != 0) {
                     this.sections[i - 1].end = crds
-                else
+                } else {
                     this.sections[numberOfSides].end = crds
+                }
             }
         }
 
