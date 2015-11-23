@@ -3,7 +3,7 @@
 
         private startPoint: Coordinates;
         private center: Coordinates;
-        private height: number;
+        private sectionLength: number;
         private canvas: HTMLCanvasElement;
         private ctx: CanvasRenderingContext2D;
         private dots: List<number>;
@@ -12,15 +12,18 @@
         private sections: Section[];
         private sectionNumber = 5;
         private radiusSection: Section;
+        private intervalId = null;
 
-        constructor(canvas: HTMLCanvasElement, height: number, startPoint: Coordinates) {
+
+        constructor(sectionNum:number, canvas: HTMLCanvasElement, sectionLength: number, startPoint: Coordinates) {
             this.canvas = canvas;
             this.startPoint = startPoint;
-            this.height = height;
+            this.sectionLength = sectionLength;
             this.ctx = canvas.getContext("2d");
             this.dots = new List<number>(100);
-            this.center = new Coordinates(startPoint.x + height / 2, startPoint.y + height / 2);
-
+            this.center = new Coordinates(startPoint.x + sectionLength / 2, startPoint.y + sectionLength / 2);
+            this.sectionNumber = sectionNum + 1;
+            
             this.initSections();
         }
 
@@ -28,10 +31,10 @@
 
             var tempAmgle = 0;
 
-            setInterval(() => {
+            this.intervalId = setInterval(() => {
 
-                var x = this.center.x + this.height * 2 * Math.cos(tempAmgle);
-                var y = this.center.y + this.height * 2 * Math.sin(tempAmgle);
+                var x = this.center.x + this.sectionLength * 2 * Math.cos(tempAmgle);
+                var y = this.center.y + this.sectionLength * 2 * Math.sin(tempAmgle);
 
                 var crd = new Coordinates(x, y);
                 this.radiusSection = new Section(this.center, crd);
@@ -50,7 +53,7 @@
 
                     this.drawGraph();
 
-                    this.drawConnectingLine(intersection, new Coordinates(1250 - (this.startPoint.x + this.height + this.dots.length * 4), intersection.y));
+                    this.drawConnectingLine(intersection, new Coordinates(1250 - (this.startPoint.x + this.sectionLength + this.dots.length * 4), intersection.y));
                 }
                 tempAmgle += 0.05;
 
@@ -155,7 +158,7 @@
             var length = this.dots.length;
 
             for (let i = 0; i < length; i++) {
-                this.drawDot(new Coordinates(1250 - (this.startPoint.x + this.height + i * 4), this.dots.getAt(i)), 2);
+                this.drawDot(new Coordinates(1250 - (this.startPoint.x + this.sectionLength + i * 4), this.dots.getAt(i)), 2);
             }
         }
 
@@ -165,6 +168,11 @@
             var canvasH = parseInt(this.canvas.getAttribute("height"), 10);
 
             this.ctx.clearRect(0, 0, canvasW, canvasH);
+        }
+
+        destruct = () => {
+            clearInterval(this.intervalId);
+            this.clear();
         }
     }
 }
