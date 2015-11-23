@@ -307,17 +307,18 @@ var $;
 })($ || ($ = {}));
 var Animations;
 (function (Animations) {
-    var Hexagon = (function () {
-        function Hexagon(canvas, height, startPoint) {
+    var Polygon = (function () {
+        function Polygon(sectionNum, canvas, sectionLength, startPoint) {
             var _this = this;
             this.temp = false;
             this.interval = 16;
-            this.sections = new Array(7);
+            this.sectionNumber = 5;
+            this.intervalId = null;
             this.start = function () {
                 var tempAmgle = 0;
-                setInterval(function () {
-                    var x = _this.center.x + _this.height * 2 * Math.cos(tempAmgle);
-                    var y = _this.center.y + _this.height * 2 * Math.sin(tempAmgle);
+                _this.intervalId = setInterval(function () {
+                    var x = _this.center.x + _this.sectionLength * 2 * Math.cos(tempAmgle);
+                    var y = _this.center.y + _this.sectionLength * 2 * Math.sin(tempAmgle);
                     var crd = new Animations.Coordinates(x, y);
                     _this.radiusSection = new Animations.Section(_this.center, crd);
                     var intersection = _this.getSquareIntersectionPoint(crd);
@@ -330,27 +331,34 @@ var Animations;
                             _this.dots.removeFirst();
                         }
                         _this.drawGraph();
-                        _this.drawConnectingLine(intersection, new Animations.Coordinates(1250 - (_this.startPoint.x + _this.height + _this.dots.length * 4), intersection.y));
+                        _this.drawConnectingLine(intersection, new Animations.Coordinates(1250 - (_this.startPoint.x + _this.sectionLength + _this.dots.length * 4), intersection.y));
                     }
                     tempAmgle += 0.05;
                 }, _this.interval);
             };
             this.initSections = function () {
-                for (var i = 0; i < 7; i++) {
+                _this.sections = new Array(_this.sectionNumber);
+                for (var i = 0; i < _this.sectionNumber; i++) {
                     _this.sections[i] = new Animations.Section(null, null);
                 }
-                var numberOfSides = 6, size = 100, Xcenter = 160, Ycenter = 160;
+                var numberOfSides = _this.sectionNumber - 1, size = 100, Xcenter = 160, Ycenter = 160;
                 var x;
                 var y;
-                for (var i = 0; i <= numberOfSides; i += 1) {
-                    x = Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides);
-                    y = Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides);
+                var angleNumber = (_this.sectionNumber - 1);
+                var innerAngle = 180 * (angleNumber - 2) / angleNumber;
+                var rotateAngle = (180 - innerAngle);
+                var rotateAngleRadian = (Math.PI / 180) * (rotateAngle / 2);
+                for (var i = 0; i <= numberOfSides; i++) {
+                    x = Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides - rotateAngleRadian);
+                    y = Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides - rotateAngleRadian);
                     var crds = new Animations.Coordinates(x, y);
                     _this.sections[i].start = crds;
-                    if (i != 0)
+                    if (i != 0) {
                         _this.sections[i - 1].end = crds;
-                    else
+                    }
+                    else {
                         _this.sections[numberOfSides].end = crds;
+                    }
                 }
             };
             this.getSquareIntersectionPoint = function (crd) {
@@ -401,7 +409,7 @@ var Animations;
             this.drawGraph = function () {
                 var length = _this.dots.length;
                 for (var i = 0; i < length; i++) {
-                    _this.drawDot(new Animations.Coordinates(1250 - (_this.startPoint.x + _this.height + i * 4), _this.dots.getAt(i)), 2);
+                    _this.drawDot(new Animations.Coordinates(1250 - (_this.startPoint.x + _this.sectionLength + i * 4), _this.dots.getAt(i)), 2);
                 }
             };
             this.clear = function () {
@@ -409,17 +417,22 @@ var Animations;
                 var canvasH = parseInt(_this.canvas.getAttribute("height"), 10);
                 _this.ctx.clearRect(0, 0, canvasW, canvasH);
             };
+            this.destruct = function () {
+                clearInterval(_this.intervalId);
+                _this.clear();
+            };
             this.canvas = canvas;
             this.startPoint = startPoint;
-            this.height = height;
+            this.sectionLength = sectionLength;
             this.ctx = canvas.getContext("2d");
             this.dots = new List(100);
-            this.center = new Animations.Coordinates(startPoint.x + height / 2, startPoint.y + height / 2);
+            this.center = new Animations.Coordinates(startPoint.x + sectionLength / 2, startPoint.y + sectionLength / 2);
+            this.sectionNumber = sectionNum + 1;
             this.initSections();
         }
-        return Hexagon;
+        return Polygon;
     })();
-    Animations.Hexagon = Hexagon;
+    Animations.Polygon = Polygon;
 })(Animations || (Animations = {}));
 var List = MyLib.List;
 var Animations;
@@ -492,124 +505,31 @@ var Animations;
     })();
     Animations.Circle = Circle;
 })(Animations || (Animations = {}));
-var Animations;
-(function (Animations) {
-    var Square = (function () {
-        function Square(canvas, height, startPoint) {
-            var _this = this;
-            this.interval = 16;
-            this.start = function () {
-                var tempAmgle = 0;
-                setInterval(function () {
-                    var x = _this.center.x + _this.height * Math.cos(tempAmgle);
-                    var y = _this.center.y + _this.height * Math.sin(tempAmgle);
-                    var crd = new Animations.Coordinates(x, y);
-                    var intersection = _this.getSquareIntersectionPoint(crd);
-                    if (intersection != null) {
-                        _this.clear();
-                        _this.drawSquare();
-                        _this.drawRadius(intersection);
-                        _this.dots.add(intersection.y);
-                        if (_this.dots.length > 200) {
-                            _this.dots.removeFirst();
-                        }
-                        _this.drawGraph();
-                        _this.drawConnectingLine(intersection, new Animations.Coordinates(1250 - (_this.startPoint.x + _this.height + _this.dots.length * 4), intersection.y));
-                    }
-                    tempAmgle += 0.05;
-                }, _this.interval);
-            };
-            this.getSquareIntersectionPoint = function (crd) {
-                var point = null;
-                point = Animations.lineIntersect(_this.center.x, _this.center.y, crd.x, crd.y, _this.startPoint.x, _this.startPoint.y, _this.startPoint.x, _this.startPoint.y + _this.height);
-                if (point == null) {
-                    point = Animations.lineIntersect(_this.center.x, _this.center.y, crd.x, crd.y, _this.startPoint.x, _this.startPoint.y, _this.startPoint.x + _this.height, _this.startPoint.y);
-                }
-                if (point == null) {
-                    point = Animations.lineIntersect(_this.center.x, _this.center.y, crd.x, crd.y, _this.startPoint.x + _this.height, _this.startPoint.y, _this.startPoint.x + _this.height, _this.startPoint.y + _this.height);
-                }
-                if (point == null) {
-                    point = Animations.lineIntersect(_this.center.x, _this.center.y, crd.x, crd.y, _this.startPoint.x, _this.startPoint.y + _this.height, _this.startPoint.x + _this.height, _this.startPoint.y + _this.height);
-                }
-                return point;
-                //var point: Coordinates = null;
-                //point = getIntersectionPoint(this.center, crd, this.startPoint, new Coordinates(this.startPoint.x, this.startPoint.y + this.height));
-                //if (point == null) {
-                //    point = getIntersectionPoint(this.center, crd, this.startPoint, new Coordinates(this.startPoint.x + this.height, this.startPoint.y));
-                //}
-                //if (point == null) {
-                //    point = getIntersectionPoint(this.center, crd, new Coordinates(this.startPoint.x + this.height, this.startPoint.y), new Coordinates(this.startPoint.x + this.height, this.startPoint.y + this.height));
-                //}
-                //if (point == null) {
-                //    point = getIntersectionPoint(this.center, crd, new Coordinates(this.startPoint.x, this.startPoint.y + this.height), new Coordinates(this.startPoint.x + this.height, this.startPoint.y + this.height));
-                //}
-                //return point;
-            };
-            this.drawConnectingLine = function (start, end) {
-                _this.ctx.strokeStyle = "#00FF00";
-                _this.ctx.beginPath();
-                _this.ctx.lineTo(start.x, start.y);
-                _this.ctx.lineTo(end.x, end.y);
-                _this.ctx.stroke();
-                _this.ctx.strokeStyle = "#000000";
-            };
-            this.drawRadius = function (end) {
-                _this.ctx.beginPath();
-                _this.ctx.strokeStyle = "#ff0000";
-                _this.ctx.lineTo(_this.center.x, _this.center.y);
-                _this.ctx.lineTo(end.x, end.y);
-                _this.ctx.stroke();
-                _this.ctx.strokeStyle = "#000000";
-            };
-            this.drawSquare = function () {
-                _this.ctx.beginPath();
-                _this.ctx.strokeRect(_this.startPoint.x, _this.startPoint.y, _this.height, _this.height);
-                _this.ctx.stroke();
-            };
-            this.drawDot = function (crds, width) {
-                if (width === void 0) { width = 1; }
-                _this.ctx.fillRect(crds.x, crds.y, width, width);
-            };
-            this.drawGraph = function () {
-                var length = _this.dots.length;
-                for (var i = 0; i < length; i++) {
-                    _this.drawDot(new Animations.Coordinates(1250 - (_this.startPoint.x + _this.height + i * 4), _this.dots.getAt(i)), 2);
-                }
-            };
-            this.clear = function () {
-                var canvasW = parseInt(_this.canvas.getAttribute("width"), 10);
-                var canvasH = parseInt(_this.canvas.getAttribute("height"), 10);
-                _this.ctx.clearRect(0, 0, canvasW, canvasH);
-            };
-            this.canvas = canvas;
-            this.startPoint = startPoint;
-            this.height = height;
-            this.ctx = canvas.getContext("2d");
-            this.dots = new List(100);
-            this.center = new Animations.Coordinates(startPoint.x + height / 2, startPoint.y + height / 2);
-        }
-        return Square;
-    })();
-    Animations.Square = Square;
-})(Animations || (Animations = {}));
 /// <reference path="$.ts"/>
 /// <reference path="../myLib/List.ts"/>
 /// <reference path="helpers.ts" />
 /// <reference path="Circle.ts"/>
-/// <reference path="Square.ts"/>
 var canvas = $.query("#canvas");
 var center = new Animations.Coordinates(150, 150);
 var radius = 50;
 var cirle = new Animations.Circle(canvas, radius, center);
 cirle.start();
+////////////////////////////////////////////////////////////
 var canvas2 = $.query("#canvas2");
-var startPoint = new Animations.Coordinates(120, 120);
-var height = 100;
-var square = new Animations.Square(canvas2, height, startPoint);
-square.start();
-var canvas3 = $.query("#canvas3");
-var startPoint = new Animations.Coordinates(120, 120);
-var height = 80;
-var hexagon = new Animations.Hexagon(canvas3, height, startPoint);
-hexagon.start();
+var ctrl = $.query("#angleNumber");
+var polygon = null;
+ctrl.onchange = function (e) {
+    var angleNumber = parseInt(e.srcElement.value, 10);
+    angleNumChanged(angleNumber);
+};
+function angleNumChanged(angleNumber) {
+    var startPoint = new Animations.Coordinates(120, 120);
+    var height = 80;
+    if (polygon != null) {
+        polygon.destruct();
+    }
+    polygon = new Animations.Polygon(angleNumber, canvas2, height, startPoint);
+    polygon.start();
+}
+angleNumChanged(4);
 //# sourceMappingURL=app.js.map
