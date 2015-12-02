@@ -81,12 +81,33 @@
   <ItemGroup>
     <Content Include="app.js" />
     <Content Include="index.html" />
+    <Content Include="Scripts\three.js\build\three.js" />
+    <Content Include="Scripts\three.js\build\three.min.js" />
+    <Content Include="Scripts\tween.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\typings\threejs\detector.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-canvasrenderer.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-copyshader.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-css3drenderer.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-editorcontrols.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-effectcomposer.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-FirstPersonControls.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-maskpass.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-orbitcontrols.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-projector.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-renderpass.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-shaderpass.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-trackballcontrols.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-transformcontrols.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-vrcontrols.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three-vreffect.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\threejs\three.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\tween.js\tween.js.d.ts" />
     <TypeScriptCompile Include="src\helpers.ts" />
     <TypeScriptCompile Include="myLib\List.ts" />
     <TypeScriptCompile Include="src\%24.ts" />
