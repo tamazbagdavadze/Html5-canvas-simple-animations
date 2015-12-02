@@ -68,6 +68,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\normalize.css" />
+    <Content Include="Content\css.css" />
     <Content Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -88,7 +90,7 @@
     <TypeScriptCompile Include="src\helpers.ts" />
     <TypeScriptCompile Include="myLib\List.ts" />
     <TypeScriptCompile Include="src\%24.ts" />
-    <TypeScriptCompile Include="src\Hexagon.ts" />
+    <TypeScriptCompile Include="src\Polygon.ts" />
     <TypeScriptCompile Include="src\main.ts" />
     <TypeScriptCompile Include="src\Circle.ts" />
   </ItemGroup>

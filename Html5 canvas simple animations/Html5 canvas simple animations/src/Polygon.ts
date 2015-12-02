@@ -24,7 +24,7 @@
             this.center = new Coordinates(startPoint.x + sectionLength / 2, startPoint.y + sectionLength / 2);
             this.sectionNumber = sectionNum + 1;
             
-            this.initSections();
+            this.initPolygonSections();
         }
 
         start = (): void => {
@@ -60,7 +60,7 @@
             }, this.interval);
         }
 
-        initSections = (): void => {
+        initPolygonSections = (): void => {
 
             this.sections = new Array<Section>(this.sectionNumber);
 

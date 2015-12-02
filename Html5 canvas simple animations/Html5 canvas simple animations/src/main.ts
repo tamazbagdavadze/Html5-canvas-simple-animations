@@ -42,3 +42,5 @@ function angleNumChanged(angleNumber: number) {
 }
 
 angleNumChanged(4);
+
+var a = () => 4;

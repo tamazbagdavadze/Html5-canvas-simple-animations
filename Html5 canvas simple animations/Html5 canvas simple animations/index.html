@@ -3,24 +3,44 @@
 <head>
     <title>canvas</title>
 	<meta charset="utf-8" />
+
+    <link rel="stylesheet" type="text/css" href="Content/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="Content/css.css" />
 </head>
 <body>
 
+    <div class="div">
 
-<canvas id="canvas" width="1000" height="250">
-    
-</canvas>
+        <div class="title">
+            <span>circle</span>
+        </div>
 
-    <label>
-        angle number
-        <input id="angleNumber" type="number" value="4" />
-    </label>
+        <div class="content">
+            <canvas id="canvas" width="1000" height="250"></canvas>
+        </div>
 
-<canvas id="canvas2" width="1000" height="300">
+    </div>
 
-</canvas>
 
-<script src="app.js"></script>
+    <div class="div">
+
+        <div class="title">
+            <span>square</span>
+        </div>
+
+        <div class="content">
+            <canvas id="canvas2" width="1000" height="300"></canvas>
+
+            <label>
+                angle number
+                <input id="angleNumber" type="number" value="4" />
+            </label>
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
 
 </body>
 </html>
+    
