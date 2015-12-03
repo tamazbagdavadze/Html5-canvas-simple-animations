@@ -3,22 +3,50 @@
 <head>
     <title>canvas</title>
     <meta charset="utf-8" />
+
+    <link rel="stylesheet" type="text/css" href="Content/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="Content/css.css" />
 </head>
 <body>
 
+<div class="div">
 
-<canvas id="canvas" width="1000" height="250">
+    <div class="title">
+        <span>circle</span>
+    </div>
 
-</canvas>
+    <div class="content">
+        <canvas id="canvas" width="1000" height="250"></canvas>
+    </div>
 
-<canvas id="canvas2" width="1000" height="300">
+</div>
 
-</canvas>
 
-<label style="display: block;">
-    angle number :
-    <input id="angleNumber" type="number" value="4" />
-</label>
+<div class="div">
+
+    <div class="title">
+        <span>square</span>
+    </div>
+
+    <div class="content">
+        <canvas id="canvas2" width="1000" height="300"></canvas>
+
+        <label>
+            angle number
+            <input id="angleNumber" type="number" value="4" />
+        </label>
+    </div>
+
+</div>
+
+
+<div class="div">
+    <div class="title">boxes</div>
+    <div class="content">
+        <canvas id="canvas3" width="1000" height="300"></canvas>
+    </div>
+</div>
+
 
 <script src="app.js"></script>
 

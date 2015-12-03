@@ -336,7 +336,7 @@ var Animations;
                     tempAmgle += 0.05;
                 }, _this.interval);
             };
-            this.initSections = function () {
+            this.initPolygonSections = function () {
                 _this.sections = new Array(_this.sectionNumber);
                 for (var i = 0; i < _this.sectionNumber; i++) {
                     _this.sections[i] = new Animations.Section(null, null);
@@ -428,7 +428,7 @@ var Animations;
             this.dots = new List(100);
             this.center = new Animations.Coordinates(startPoint.x + sectionLength / 2, startPoint.y + sectionLength / 2);
             this.sectionNumber = sectionNum + 1;
-            this.initSections();
+            this.initPolygonSections();
         }
         return Polygon;
     })();
@@ -536,4 +536,5 @@ function angleNumChanged(angleNumber) {
     polygon.start();
 }
 angleNumChanged(4);
+var a = function () { return 4; };
 //# sourceMappingURL=app.js.map
