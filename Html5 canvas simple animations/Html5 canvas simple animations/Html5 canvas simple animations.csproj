@@ -87,6 +87,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="src\DivideCircles.ts" />
     <TypeScriptCompile Include="src\helpers.ts" />
     <TypeScriptCompile Include="myLib\List.ts" />
     <TypeScriptCompile Include="src\%24.ts" />

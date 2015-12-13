@@ -8,8 +8,8 @@
     transition:all linear 0.6s;
 }
 
-.title:hover + .content{
-    height: 300px;
+.div:hover > .content{
+    height: 340px;
     margin: 20px;
     opacity : 1;
     transition:all linear 1s;

@@ -2,7 +2,8 @@
 /// <reference path="../myLib/List.ts"/>
 /// <reference path="helpers.ts" />
 /// <reference path="Circle.ts"/>
-
+/// <reference path="Polygon.ts"/>
+/// <reference path="DivideCircles.ts"/>
 
 
 var canvas = $.query("#canvas") as HTMLCanvasElement;
@@ -44,3 +45,8 @@ function angleNumChanged(angleNumber: number) {
 angleNumChanged(4);
 
 var a = () => 4;
+
+
+var canvas4 = $.query('#canvas4') as HTMLCanvasElement;
+var dc = new Animations.DivideCircles(canvas4, 4);
+
