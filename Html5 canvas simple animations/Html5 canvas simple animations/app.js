@@ -210,52 +210,6 @@ var Animations;
 })(Animations || (Animations = {}));
 var Animations;
 (function (Animations) {
-    var Circle = (function () {
-        function Circle(crd, radius) {
-            this.crd = crd;
-            this.radius = radius;
-        }
-        return Circle;
-    })();
-    var DivideCircles = (function () {
-        function DivideCircles(canvas, initNum) {
-            var _this = this;
-            this.interval = 30;
-            this.start = function () {
-            };
-            this.drawArc = function (start, radius) {
-                _this.ctx.beginPath();
-                _this.ctx.arc(start.x, start.y, radius, 0, 2 * Math.PI);
-                _this.ctx.stroke();
-            };
-            this.drawDot = function (crds, width) {
-                if (width === void 0) { width = 1; }
-                _this.ctx.fillRect(crds.x, crds.y, width, width);
-            };
-            this.drawCircles = function () {
-                var length = _this.circles.length;
-                for (var i = 0; i < length; i++) {
-                    var circle = _this.circles.getAt(i);
-                }
-            };
-            this.clear = function () {
-                var canvasW = parseInt(_this.canvas.getAttribute("width"), 10);
-                var canvasH = parseInt(_this.canvas.getAttribute("height"), 10);
-                _this.ctx.clearRect(0, 0, canvasW, canvasH);
-            };
-            this.canvas = canvas;
-            this.initNum = initNum;
-            this.ctx = canvas.getContext("2d");
-            this.circles = new List(100);
-            this.circles.add(new Circle(new Animations.Coordinates(20, 20), 10));
-            this.drawCircles();
-        }
-        return DivideCircles;
-    })();
-    Animations.DivideCircles = DivideCircles;
-})(Animations || (Animations = {}));
-var Animations;
-(function (Animations) {
     var Coordinates = (function () {
         function Coordinates(x, y) {
             this.x = x;
@@ -556,7 +510,6 @@ var Animations;
 /// <reference path="helpers.ts" />
 /// <reference path="Circle.ts"/>
 /// <reference path="Polygon.ts"/>
-/// <reference path="DivideCircles.ts"/>
 var canvas = $.query("#canvas");
 var center = new Animations.Coordinates(150, 150);
 var radius = 50;
@@ -584,7 +537,4 @@ function angleNumChanged(angleNumber) {
     polygon.start();
 }
 angleNumChanged(4);
-var a = function () { return 4; };
-var canvas4 = $.query('#canvas4');
-var dc = new Animations.DivideCircles(canvas4, 4);
 //# sourceMappingURL=app.js.map
